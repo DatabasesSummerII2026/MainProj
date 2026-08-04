@@ -30,9 +30,7 @@ DROP TABLE IF EXISTS Personnel;
 SET FOREIGN_KEY_CHECKS = 1;
 
 
--- Locations. managerID is nullable because a location can be between
--- managers, and its FK is added by ALTER further down: Locations and Personnel
--- reference each other.
+-- Locations. managerID is nullable because a location can be between managers, and its FK is added by ALTER further down: Locations and Personnel reference each other.
 CREATE TABLE Locations (
     locationID   INT AUTO_INCREMENT PRIMARY KEY,
     name         VARCHAR(100) NOT NULL,
@@ -51,9 +49,7 @@ CREATE TABLE Locations (
 ) ENGINE=InnoDB;
 
 
--- Location_Phones. The description says a location has "phone number(s)".
--- A repeating attribute inside Locations breaks 1NF, so it gets its own
--- relation. The whole relation is the key.
+-- Location_Phones. The description says a location has "phone number(s)". A repeating attribute inside Locations breaks 1NF, so it gets its own relation. The whole relation is the key.
 CREATE TABLE Location_Phones (
     locationID   INT         NOT NULL,
     phone        VARCHAR(20) NOT NULL,
@@ -64,11 +60,8 @@ CREATE TABLE Location_Phones (
 ) ENGINE=InnoDB;
 
 
--- Personnel. `title` is an extension. The description names a general
--- manager, deputy manager, treasurer and secretary at the head location, but
--- limits `role` to Administrator, Captain, Coach, Assistant Coach and Other.
--- Those four posts all fall under Administrator or Other, so the post goes in
--- `title` instead of being added to the role list.
+-- Personnel. `title` is an extension. The description names a general manager, deputy manager, treasurer and secretary at the head location, but limits `role` to Administrator, Captain, Coach, Assistant Coach and Other.
+-- Those four posts all fall under Administrator or Other, so the post goes in `title` instead of being added to the role list.
 CREATE TABLE Personnel (
     personnelID  INT AUTO_INCREMENT PRIMARY KEY,
     firstName    VARCHAR(60)  NOT NULL,
@@ -95,8 +88,7 @@ ALTER TABLE Locations
         REFERENCES Personnel(personnelID) ON DELETE SET NULL;
 
 
--- FamilyMembers. familyType separates the primary family member, the one who
--- registered the child, from secondary ones. Report 9 needs it.
+-- FamilyMembers. familyType separates the primary family member, the one who registered the child, from secondary ones. Report 9 needs it.
 CREATE TABLE FamilyMembers (
     familyID     INT AUTO_INCREMENT PRIMARY KEY,
     firstName    VARCHAR(60)  NOT NULL,
@@ -118,15 +110,9 @@ CREATE TABLE FamilyMembers (
 
 
 -- ClubMembers.
---
--- memberType is deliberately not stored. A stored Major/Minor column is wrong
--- the day a 17-year-old turns 18, and report 14 needs both the current type and
--- the type at registration. Both are functions of DOB, so storing it would be
--- a transitive dependency, memberID -> DOB -> memberType, and an update
--- anomaly. v_MemberStatus derives both.
---
+-- memberType is deliberately not stored. A stored Major/Minor column is wrong the day a 17-year-old turns 18, and report 14 needs both the current type and the type at registration. 
+-- Both are functions of DOB, so storing it would be a transitive dependency, memberID -> DOB -> memberType, and an update anomaly. v_MemberStatus derives both.
 -- gender is needed for the rule that a formation cannot mix boys and girls.
--- The warm-up schema had no way to express it.
 CREATE TABLE ClubMembers (
     memberID         INT AUTO_INCREMENT PRIMARY KEY,   -- globally unique across all locations
     firstName        VARCHAR(60)  NOT NULL,
@@ -169,9 +155,7 @@ CREATE TABLE Member_Hobby (
 ) ENGINE=InnoDB;
 
 
--- Payments. The four-installment cap comes from the UNIQUE key plus the
--- installmentNumber range, and from a trigger on 5.7. Donations are derived in
--- v_MemberDonations, never stored.
+-- Payments. The four-installment cap comes from the UNIQUE key plus the installmentNumber range, and from a trigger on 5.7. Donations are derived in v_MemberDonations, never stored.
 CREATE TABLE Payments (
     paymentID        INT AUTO_INCREMENT PRIMARY KEY,
     memberID         INT           NOT NULL,
@@ -213,9 +197,7 @@ CREATE TABLE Team_Members (
 
 
 -- Sessions. A session is the event; a formation is one of the two teams in it.
--- Without this relation there is no way to pair the two sides of a game, which
--- report 18 needs, and nowhere to put the session address, which report 10
--- needs.
+-- Without this relation there is no way to pair the two sides of a game, which report 18 needs, and nowhere to put the session address, which report 10 needs.
 CREATE TABLE Sessions (
     sessionID     INT AUTO_INCREMENT PRIMARY KEY,
     startDateTime DATETIME     NOT NULL,
@@ -227,8 +209,7 @@ CREATE TABLE Sessions (
 
 
 -- TeamFormations, absorbing HasFormation, UsesTeam and HeadCoaches.
--- UNIQUE(sessionID, teamID) stops a team facing itself. The at-most-two rule is
--- in triggers.sql.
+-- UNIQUE(sessionID, teamID) stops a team facing itself. The at-most-two rule is in triggers.sql.
 CREATE TABLE TeamFormations (
     formationID INT AUTO_INCREMENT PRIMARY KEY,
     sessionID   INT NOT NULL,
@@ -244,8 +225,7 @@ CREATE TABLE TeamFormations (
 ) ENGINE=InnoDB;
 
 
--- FormationPlayers, from AssignedTo. The enum shortens the description's role
--- names. Put this mapping in the report assumptions:
+-- FormationPlayers, from AssignedTo. The enum shortens the description's role names. Put this mapping in the report assumptions:
 --   "Center back or sweeper"       -> 'Sweeper'
 --   "Defending/holding midfielder" -> 'Defending midfielder'
 --   "Right midfielder or winger"   -> 'Right winger'
@@ -326,8 +306,7 @@ CREATE TABLE FamilyRelationship (
 ) ENGINE=InnoDB;
 
 
--- EmailLogs. bodyPreview is capped at 100 characters by the description.
--- `body` is an extension so the demo can show the whole message.
+-- EmailLogs. bodyPreview is capped at 100 characters by the description. `body` is an extension so the demo can show the whole message.
 CREATE TABLE EmailLogs (
     emailLogID       INT AUTO_INCREMENT PRIMARY KEY,
     emailDateTime    DATETIME     NOT NULL,
@@ -347,13 +326,9 @@ CREATE TABLE EmailLogs (
 
 -- FIFA_Games and Game_Participation.
 --
--- These are not Sessions and TeamFormations under another name. A FIFA game is
--- an external event the club records about a member; a session is one the club
--- schedules. Report 13 asks for members never assigned to a formation who have
--- played a FIFA game, which is unanswerable if the two are merged.
+-- These are not Sessions and TeamFormations under another name. A FIFA game is an external event the club records about a member; a session is one the club schedules. Report 13 asks for members never assigned to a formation who have played a FIFA game, which is unanswerable if the two are merged.
 --
--- scoreWith and scoreAgainst are integers rather than a '2-1' string so they
--- can be compared in SQL.
+-- scoreWith and scoreAgainst are integers rather than a '2-1' string so they can be compared in SQL.
 CREATE TABLE FIFA_Games (
     gameID       INT AUTO_INCREMENT PRIMARY KEY,
     gameDate     DATE         NOT NULL,
@@ -377,7 +352,6 @@ CREATE TABLE Game_Participation (
 
 
 -- Views.
-
 -- Current location of every club member (endDate IS NULL = current).
 CREATE VIEW v_MemberCurrentLocation AS
 SELECT mlh.memberID,
@@ -390,10 +364,7 @@ WHERE  mlh.endDate IS NULL;
 
 -- Age, major/minor, active/inactive and current location, all derived.
 --
--- The active rule is an assumption worth stating in the report: a member is
--- inactive when the previous calendar year's fees were not paid in full. A
--- member who registered this year has no previous year and is active. The fee
--- for year Y follows the member's age on 1 January of Y.
+-- The active rule is an assumption worth stating in the report: a member is inactive when the previous calendar year's fees were not paid in full. A member who registered this year has no previous year and is active. The fee for year Y follows the member's age on 1 January of Y.
 CREATE VIEW v_MemberStatus AS
 SELECT
     cm.memberID,
