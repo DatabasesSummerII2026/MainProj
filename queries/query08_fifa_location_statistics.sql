@@ -1,71 +1,25 @@
--- Query 8: Statistics of FIFA Players by Location
--- This query identifies locations that have trained or hosted at least
--- two members who have participated in FIFA games.
--- It also provides information about the location, general manager,
--- member distribution, and number of FIFA players.
+-- Requirement 8: locations with at least two members who played a FIFA game, sorted by number of FIFA players descending.
+-- Membership comes from v_MemberCurrentLocation, so a member who transferred branch is not counted at both. Phone numbers come from Location_Phones because a location can have more than one.
 
-SELECT 
-    l.LocationID,
-    l.Name AS location_name,
-    l.Address,
-    l.City,
-    l.Province,
-    l.PostalCode,
-    l.Phone,
-    l.WebAddress,
-    l.Type,
-    l.Capacity,
-
-    -- Retrieve the full name of the location's general manager
-    CONCAT(p.FirstName, ' ', p.LastName) AS general_manager_name,
-
-    -- Count the number of minor members associated with this location
-    COUNT(DISTINCT CASE 
-        WHEN cm.MemberType = 'Minor' THEN cm.MemberID 
-    END) AS minor_member_count,
-
-    -- Count the number of major members associated with this location
-    COUNT(DISTINCT CASE 
-        WHEN cm.MemberType = 'Major' THEN cm.MemberID 
-    END) AS major_member_count,
-
-    -- Count the number of unique members who participated in FIFA games
-    COUNT(DISTINCT gp.MemberID) AS fifa_player_count
-
+SELECT
+    l.locationID,
+    l.name                                              AS locationName,
+    l.address, l.city, l.province, l.postalCode,
+    (SELECT GROUP_CONCAT(lp.phone SEPARATOR '; ')
+       FROM Location_Phones lp WHERE lp.locationID = l.locationID) AS phoneNumbers,
+    l.webAddress,
+    l.type,
+    l.capacity,
+    CONCAT(mgr.firstName, ' ', mgr.lastName)            AS generalManager,
+    SUM(CASE WHEN vms.memberType = 'Minor' THEN 1 ELSE 0 END) AS minorMembers,
+    SUM(CASE WHEN vms.memberType = 'Major' THEN 1 ELSE 0 END) AS majorMembers,
+    SUM(CASE WHEN EXISTS (SELECT 1 FROM Game_Participation gp
+                           WHERE gp.memberID = vms.memberID)
+             THEN 1 ELSE 0 END)                         AS fifaPlayers
 FROM Locations l
-
--- Join with Personnel table to get the general manager information
-LEFT JOIN Personnel p 
-    ON l.ManagerID = p.PersonnelID
-
--- Retrieve the historical relationship between members and locations
-LEFT JOIN Member_Location_History mlh 
-    ON l.LocationID = mlh.LocationID
-
--- Retrieve member details, including member type
-LEFT JOIN ClubMembers cm 
-    ON mlh.MemberID = cm.MemberID
-
--- Retrieve FIFA game participation records
-LEFT JOIN Game_Participation gp 
-    ON cm.MemberID = gp.MemberID
-
--- Group results by each location and its related attributes
-GROUP BY 
-    l.LocationID,
-    l.Name,
-    l.Address,
-    l.City,
-    l.Province,
-    l.PostalCode,
-    l.Phone,
-    l.WebAddress,
-    l.Type,
-    l.Capacity,
-    general_manager_name
-
--- Only display locations with at least two FIFA players
-HAVING COUNT(DISTINCT gp.MemberID) >= 2
-
--- Rank locations by the number of FIFA players in descending order
-ORDER BY fifa_player_count DESC;
+LEFT JOIN Personnel      mgr ON mgr.personnelID     = l.managerID
+LEFT JOIN v_MemberStatus vms ON vms.currentLocationID = l.locationID
+GROUP BY l.locationID, l.name, l.address, l.city, l.province, l.postalCode,
+         l.webAddress, l.type, l.capacity, mgr.firstName, mgr.lastName
+HAVING fifaPlayers >= 2
+ORDER BY fifaPlayers DESC;
