@@ -263,10 +263,3 @@ BEGIN
 END$$
 
 DELIMITER ;
-
--- Optionally let the server run this every Sunday at 08:00. Left commented because AITS may have the event scheduler off, in which case the demo calls sp_GenerateWeeklyEmails() directly.
--- SET GLOBAL event_scheduler = ON;
--- CREATE EVENT ev_WeeklyEmails
---   ON SCHEDULE EVERY 1 WEEK
---   STARTS '2026-08-09 08:00:00'
---   DO CALL sp_GenerateWeeklyEmails(CURDATE());
