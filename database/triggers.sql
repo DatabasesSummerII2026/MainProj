@@ -35,9 +35,7 @@ BEGIN
 END$$
 
 
--- At most four installments per member per membership year, and the
--- installment number must be in range. Redundant with the UNIQUE key on 8.x,
--- and the only thing enforcing it on 5.7.
+-- At most four installments per member per membership year, and the installment number must be in range. Redundant with the UNIQUE key on 8.x, and the only thing enforcing it on 5.7.
 CREATE TRIGGER trg_Payments_bi
 BEFORE INSERT ON Payments
 FOR EACH ROW
@@ -66,8 +64,7 @@ BEGIN
 END$$
 
 
--- A family relationship can only reference a member who is a minor when the
--- relationship starts.
+-- A family relationship can only reference a member who is a minor when the relationship starts.
 CREATE TRIGGER trg_FamilyRelationship_bi
 BEFORE INSERT ON FamilyRelationship
 FOR EACH ROW
@@ -83,9 +80,7 @@ BEGIN
 END$$
 
 
--- Formation rules: at most two formations per session, the head coach must
--- currently work at the team's location, and a session in the future cannot
--- already have a score.
+-- Formation rules: at most two formations per session, the head coach must currently work at the team's location, and a session in the future cannot already have a score.
 CREATE TRIGGER trg_TeamFormations_bi
 BEFORE INSERT ON TeamFormations
 FOR EACH ROW
@@ -140,17 +135,10 @@ END$$
 
 
 -- The main trigger. Four rules checked before a player joins a formation:
---
---   Three-hour rule. If the player is already in a formation the same day, the
---   two sessions must start at least three hours apart. This also blocks
---   putting one player on both sides of a session, since that gap is zero.
---
+--   Three-hour rule. If the player is already in a formation the same day, the two sessions must start at least three hours apart. This also blocks putting one player on both sides of a session, since that gap is zero.
 --   Gender. The player's gender must match the team's.
---
 --   Location. Every player must currently belong to the team's location.
---
 --   Fees. An inactive member cannot take part in any game or activity.
---
 -- The logic sits in one procedure so INSERT and UPDATE cannot drift apart.
 CREATE PROCEDURE sp_CheckFormationPlayer(IN p_formationID INT, IN p_memberID INT)
 BEGIN
@@ -229,15 +217,10 @@ END$$
 
 
 -- Weekly email generation, requirement 22.
---
--- Takes the Sunday the batch runs on and emails every player assigned to a
--- session in the following seven days. One EmailLogs row per email.
---
+-- Takes the Sunday the batch runs on and emails every player assigned to a session in the following seven days. One EmailLogs row per email.
 -- The subject follows the example in the description:
 --   "Montreal Group 6 Saturday 18-July-2026 2:00 PM training session"
---
--- Re-running for the same Sunday adds nothing, so the PODs can run it twice
--- without filling the log with duplicates.
+-- Re-running for the same Sunday adds nothing, so the PODs can run it twice without filling the log with duplicates.
 CREATE PROCEDURE sp_GenerateWeeklyEmails(IN p_sunday DATE)
 BEGIN
     INSERT INTO EmailLogs
@@ -281,10 +264,7 @@ END$$
 
 DELIMITER ;
 
--- Optionally let the server run this every Sunday at 08:00. Left commented
--- because AITS may have the event scheduler off, in which case the demo calls
--- sp_GenerateWeeklyEmails() directly.
---
+-- Optionally let the server run this every Sunday at 08:00. Left commented because AITS may have the event scheduler off, in which case the demo calls sp_GenerateWeeklyEmails() directly.
 -- SET GLOBAL event_scheduler = ON;
 -- CREATE EVENT ev_WeeklyEmails
 --   ON SCHEDULE EVERY 1 WEEK
