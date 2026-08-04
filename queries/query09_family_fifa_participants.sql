@@ -1,64 +1,23 @@
--- Query 9: Family Members with Multiple FIFA Participants
--- This query identifies families that have at least two members
--- who participated in FIFA games.
--- It displays the family information, related club members,
--- and their relationship type within the family.
+-- Requirement 9: primary family members with at least two associated members who played a FIFA game, sorted by family first name then last name.
+-- Two filters matter: familyType restricts this to primary members, and endDate IS NULL stops a member appearing once per historical relationship row.
 
-SELECT 
-    fm.FirstName AS family_first_name,
-    fm.LastName AS family_last_name,
-
-    -- Club member information
-    cm.MemberID,
-    cm.FirstName AS member_first_name,
-    cm.LastName AS member_last_name,
+SELECT
+    fm.familyID,
+    fm.firstName                AS familyFirstName,
+    fm.lastName                 AS familyLastName,
+    cm.memberID                 AS clubMembershipNumber,
+    cm.firstName                AS memberFirstName,
+    cm.lastName                 AS memberLastName,
     cm.DOB,
-
-    -- Relationship between family and club member
-    fr.RelationshipType
-
+    fr.relationshipType
 FROM FamilyMembers fm
-
--- Join family relationship records to identify family members
-JOIN FamilyRelationship fr 
-    ON fm.FamilyID = fr.FamilyID
-
--- Retrieve club member details
-JOIN ClubMembers cm 
-    ON fr.MemberID = cm.MemberID
-
--- Retrieve FIFA participation records
-JOIN Game_Participation gp 
-    ON cm.MemberID = gp.MemberID
-
-WHERE fm.FamilyID IN (
-
-    -- Find families that have at least two different members
-    -- participating in FIFA games
-    SELECT fr_inner.FamilyID
-
-    FROM FamilyRelationship fr_inner
-
-    JOIN Game_Participation gp_inner 
-        ON fr_inner.MemberID = gp_inner.MemberID
-
-    GROUP BY fr_inner.FamilyID
-
-    HAVING COUNT(DISTINCT fr_inner.MemberID) >= 2
-)
-
--- Remove duplicate results caused by multiple participation records
-GROUP BY 
-    fm.FamilyID,
-    fm.FirstName,
-    fm.LastName,
-    cm.MemberID,
-    cm.FirstName,
-    cm.LastName,
-    cm.DOB,
-    fr.RelationshipType
-
--- Sort results alphabetically by family name
-ORDER BY 
-    fm.FirstName ASC,
-    fm.LastName ASC;
+JOIN FamilyRelationship fr ON fr.familyID = fm.familyID AND fr.endDate IS NULL
+JOIN ClubMembers        cm ON cm.memberID = fr.memberID
+WHERE fm.familyType = 'Primary'
+  AND EXISTS (SELECT 1 FROM Game_Participation gp WHERE gp.memberID = cm.memberID)
+  AND (SELECT COUNT(DISTINCT fr2.memberID)
+         FROM FamilyRelationship fr2
+         JOIN Game_Participation gp2 ON gp2.memberID = fr2.memberID
+        WHERE fr2.familyID = fm.familyID
+          AND fr2.endDate IS NULL) >= 2
+ORDER BY fm.firstName ASC, fm.lastName ASC, cm.lastName ASC;
