@@ -3,6 +3,11 @@
 
 SET @paymentMemberID = 1006;
 
+-- Clear the demo year so the script can be run more than once. Without this a
+-- second run hits uq_Payment_installment with a duplicate key.
+DELETE FROM Payments
+WHERE memberID = @paymentMemberID AND membershipYear = 2027;
+
 INSERT INTO Payments
     (memberID, paymentDate, amount, method,
      membershipYear, installmentNumber)
