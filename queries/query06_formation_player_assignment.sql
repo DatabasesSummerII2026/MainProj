@@ -115,6 +115,9 @@ SET @conflictFormationID = LAST_INSERT_ID();
 INSERT INTO FormationPlayers (formationID, memberID, playerRole)
 VALUES (@conflictFormationID, @testMemberID, 'Striker');
 
--- Run this cleanup separately after recording the expected conflict result.
--- DELETE FROM FormationPlayers
--- WHERE formationID = @testFormationID AND memberID = @testMemberID;
+-- Cleanup, so the script can be run again. The rejected INSERT above is
+-- already visible in the output; nothing was written by it.
+DELETE FROM Sessions WHERE sessionID = @conflictSessionID;
+
+DELETE FROM FormationPlayers
+WHERE formationID = @testFormationID AND memberID = @testMemberID;
