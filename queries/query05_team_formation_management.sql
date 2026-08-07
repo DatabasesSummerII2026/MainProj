@@ -1,8 +1,10 @@
 -- Query 05: Team Formation Management
 -- teamID 1 and headCoachID 5 must exist in the seed data.
 
+-- Dated in the past. trg_TeamFormations_bu rejects a score on a session that
+-- has not happened yet, so a future date makes the UPDATE below fail.
 INSERT INTO Sessions (startDateTime, address, sessionType)
-VALUES ('2026-09-12 10:30:00',
+VALUES ('2026-07-12 10:30:00',
         '725 Saint-Charles Street, Longueuil', 'Game');
 SET @newSessionID = LAST_INSERT_ID();
 
@@ -22,4 +24,6 @@ ORDER BY tf.formationID
 LIMIT 5;
 
 --  delete
-DELETE FROM TeamFormations WHERE formationID = @newFormationID;
+-- Deleting the session cascades to the formation, so no orphan session is
+-- left behind on each run.
+DELETE FROM Sessions WHERE sessionID = @newSessionID;
