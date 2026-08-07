@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Payments — Country Soccer Club
+{% endblock %}
+
+
+
+{% block content %}
+
+
+<div class="csc-card">
+
+
+    <div class="label" style="color:var(--gold-soft);">
+        Operations
+    </div>
+
+
+    <h1 class="csc-title">
+        Membership <em>Payments</em>
+    </h1>
+
+
+    <p style="color:var(--ivory-dim); font-size:18px;">
+        Track membership payments and transaction history.
+    </p>
+
+
+
+    <table class="csc-table">
+
+
+        <tr>
+
+            <th>
+                Member
+            </th>
+
+
+            <th>
+                Date
+            </th>
+
+
+            <th>
+                Amount
+            </th>
+
+
+            <th>
+                Method
+            </th>
+
+
+            <th>
+                Year
+            </th>
+
+
+            <th>
+                Installment
+            </th>
+
+        </tr>
+
+
+
+        {% for p in payments %}
+
+
+        <tr>
+
+
+            <td>
+                {{p.memberName}}
+            </td>
+
+
+            <td>
+                {{p.paymentDate}}
+            </td>
+
+
+            <td>
+                ${{p.amount}}
+            </td>
+
+
+            <td>
+                {{p.method}}
+            </td>
+
+
+            <td>
+                {{p.membershipYear}}
+            </td>
+
+
+            <td>
+                {{p.installmentNumber}}
+            </td>
+
+
+        </tr>
+
+
+        {% else %}
+
+
+        <tr>
+
+            <td colspan="6">
+                No payments found.
+            </td>
+
+        </tr>
+
+
+        {% endfor %}
+
+
+    </table>
+
+
+</div>
+
+
+{% endblock %}

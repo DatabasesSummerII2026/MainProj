@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Country Soccer Club — Est. 1921</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --noir:#12110E;
+    --noir-2:#1A1815;
+    --ivory:#F1ECE1;
+    --ivory-dim:#E4DCCB;
+    --gold:#B8944F;
+    --gold-soft:#D9C596;
+    --bottle:#1F3A2E;
+    --burgundy:#5B2230;
+    --hair:rgba(184,148,79,0.28);
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+
+  html{scroll-behavior:smooth;}
+
+  body{
+    background:
+      linear-gradient(rgba(18,17,14,0.965), rgba(18,17,14,0.965)),
+      url("{{ url_for('static', filename='assets/tex_pinstripe_flannel.jpg') }}");
+    background-size:auto, 900px;
+    background-repeat:repeat, repeat;
+    color:var(--ivory);
+    font-family:'Cormorant Garamond', serif;
+    font-weight:400;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+
+  ::selection{background:var(--gold); color:var(--noir);}
+
+  .label{
+    font-family:'Jost', sans-serif;
+    font-weight:500;
+    letter-spacing:0.32em;
+    text-transform:uppercase;
+    font-size:11px;
+  }
+
+  a{color:inherit; text-decoration:none;}
+
+  img{max-width:100%; display:block;}
+
+  /* ===== Quilted leather texture ===== */
+  .quilt{
+    position:absolute; inset:0;
+    background-image:
+      linear-gradient(180deg, rgba(18,17,14,0.35), rgba(18,17,14,0.75)),
+      url("{{ url_for('static', filename='assets/tex_quilted_leather.jpg') }}");
+    background-size:auto, 640px;
+    background-repeat:repeat, repeat;
+    opacity:0.55;
+    pointer-events:none;
+  }
+
+  /* ===== Nav Base & Alignment ===== */
+  nav.main-nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 24px 6vw;
+    transition: padding 0.4s ease, background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+    border-bottom: 1px solid transparent;
+  }
+
+  nav.main-nav.scrolled {
+    padding: 14px 6vw;
+    background: rgba(18, 17, 14, 0.94);
+    border-bottom: 1px solid var(--hair);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  }
+
+  .nav-left, .nav-right {
+    display: flex;
+    align-items: center;
+  }
+
+  .nav-mark {
+    font-family: 'Jost', sans-serif;
+    letter-spacing: 0.28em;
+    font-size: 13px;
+    font-weight: 600;
+    display: flex; align-items: center; gap: 12px;
+    color: var(--ivory);
+    transition: opacity 0.3s ease;
+  }
+  .nav-mark:hover { opacity: 0.85; }
+  .nav-mark svg { width: 38px; height: 23px; }
+
+  /* ===== Nav Links & Dropdowns ===== */
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 36px;
+  }
+
+  .nav-links > a, .dropbtn {
+    font-family: 'Jost', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ivory-dim);
+    position: relative;
+    padding: 8px 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.3s ease;
+    cursor: pointer;
+  }
+
+  .nav-links > a:hover, .dropbtn:hover, .dropdown:hover .dropbtn {
+    color: var(--gold-soft);
+  }
+
+  .dropbtn .arrow {
+    font-size: 9px;
+    transition: transform 0.3s ease;
+    color: var(--gold);
+  }
+
+  .dropdown:hover .dropbtn .arrow {
+    transform: rotate(180deg);
+  }
+
+  /* ===== Dropdown Menu Container ===== */
+  .dropdown {
+    position: relative;
+  }
+
+  .dropdown-content {
+    opacity: 0;
+    visibility: hidden;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(12px);
+    min-width: 200px;
+    background: rgba(22, 20, 17, 0.96);
+    border: 1px solid var(--hair);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    padding: 10px 0;
+    margin-top: 12px;
+    transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                visibility 0.3s ease;
+    z-index: 200;
+  }
+
+  /* Arrow Indicator */
+  .dropdown-content::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+    width: 8px;
+    height: 8px;
+    background: rgba(22, 20, 17, 0.96);
+    border-top: 1px solid var(--hair);
+    border-left: 1px solid var(--hair);
+  }
+
+  .dropdown:hover .dropdown-content {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .dropdown-content a {
+    font-family: 'Jost', sans-serif;
+    font-size: 10.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ivory-dim);
+    padding: 12px 22px;
+    display: block;
+    white-space: nowrap;
+    transition: background 0.25s ease, color 0.25s ease, padding-left 0.25s ease;
+  }
+
+  .dropdown-content a:hover {
+    background: rgba(184, 148, 79, 0.08);
+    color: var(--gold-soft);
+    padding-left: 26px;
+  }
+
+  .nav-cta{
+    font-family:'Jost', sans-serif;
+    font-size:10px; letter-spacing:0.2em; text-transform:uppercase;
+    border:1px solid var(--gold); padding:10px 22px;
+    color:var(--gold-soft);
+    transition:background 0.35s ease, color 0.35s ease;
+  }
+  .nav-cta:hover{background:var(--gold); color:var(--noir);}
+
+  @media (max-width:880px){ .nav-links{display:none;} }
+
+  /* ===== Hero ===== */
+  .hero{
+    min-height:100vh;
+    position:relative;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center;
+    padding:120px 24px 80px;
+    background:
+      radial-gradient(ellipse at 50% -10%, rgba(184,148,79,0.14), transparent 60%),
+      linear-gradient(180deg, #100F0C 0%, #12110E 55%, #17150F 100%);
+  }
+  .crest{
+    width:172px; height:104px;
+    margin-bottom:30px;
+    animation:crestIn 1.4s cubic-bezier(.2,.8,.2,1) both;
+  }
+  @keyframes crestIn{
+    from{opacity:0; transform:translateY(14px) scale(0.94);}
+    to{opacity:1; transform:translateY(0) scale(1);}
+  }
+  .est{
+    font-family:'Jost', sans-serif;
+    letter-spacing:0.38em;
+    font-size:11px;
+    color:var(--gold-soft);
+    margin-bottom:22px;
+    opacity:0.9;
+  }
+  .hero h1{
+    font-size:clamp(42px, 8vw, 96px);
+    font-weight:400;
+    letter-spacing:0.01em;
+    line-height:1.02;
+    max-width:16ch;
+  }
+  .hero h1 em{
+    font-style:italic; font-weight:300; color:var(--gold-soft);
+  }
+  .hero-rule{
+    width:1px; height:56px;
+    background:linear-gradient(var(--gold), transparent);
+    margin:34px 0;
+  }
+  .hero p.sub{
+    font-size:19px; font-weight:300; color:var(--ivory-dim);
+    max-width:44ch; line-height:1.7; letter-spacing:0.01em;
+  }
+  .hero-actions{
+    display:flex; gap:20px; margin-top:44px; flex-wrap:wrap; justify-content:center;
+  }
+  .btn-gold, .btn-line{
+    font-family:'Jost', sans-serif; font-size:11px; letter-spacing:0.22em; text-transform:uppercase;
+    padding:16px 34px; display:inline-block;
+  }
+  .btn-gold{ background:var(--gold); color:var(--noir); transition:background 0.3s ease; }
+  .btn-gold:hover{ background:var(--gold-soft); }
+  .btn-line{ border:1px solid var(--hair); color:var(--ivory-dim); transition:border-color 0.3s ease, color 0.3s ease; }
+  .btn-line:hover{ border-color:var(--gold); color:var(--gold-soft); }
+
+  .scroll-cue{
+    position:absolute; bottom:38px; left:50%; transform:translateX(-50%);
+    font-family:'Jost', sans-serif; font-size:10px; letter-spacing:0.3em; color:var(--ivory-dim);
+    display:flex; flex-direction:column; align-items:center; gap:10px; opacity:0.6;
+  }
+  .scroll-cue .line{width:1px; height:34px; background:var(--gold); animation:scrollDrop 2s ease-in-out infinite;}
+  @keyframes scrollDrop{
+    0%{transform:scaleY(0); transform-origin:top;}
+    50%{transform:scaleY(1); transform-origin:top;}
+    50.01%{transform-origin:bottom;}
+    100%{transform:scaleY(0); transform-origin:bottom;}
+  }
+
+  /* ===== Section shell ===== */
+  section{
+    position:relative;
+    padding:150px 8vw;
+  }
+  .eyebrow{
+    color:var(--gold-soft);
+    margin-bottom:20px;
+    display:flex; align-items:center; gap:16px;
+  }
+  .eyebrow::before{
+    content:''; width:32px; height:1px; background:var(--gold);
+  }
+  h2.title{
+    font-size:clamp(32px, 4.2vw, 54px);
+    font-weight:400;
+    letter-spacing:0.005em;
+    max-width:16ch;
+    margin-bottom:8px;
+  }
+  h2.title em{font-style:italic; color:var(--gold-soft); font-weight:300;}
+
+  /* ===== Heritage ===== */
+  .heritage{
+    display:grid; grid-template-columns:0.85fr 1.15fr; gap:100px; align-items:center;
+  }
+  .heritage-visual{
+    position:relative; aspect-ratio:3/4;
+    border:1px solid var(--hair);
+    display:flex; align-items:center; justify-content:center;
+    background:
+      linear-gradient(160deg, rgba(18,17,14,0.25), rgba(18,17,14,0.55)),
+      url("{{ url_for('static', filename='assets/tex_marble_gold_vein.jpg') }}");
+    background-size:cover; background-position:center;
+  }
+  .heritage-visual .yr-cap{
+    position:absolute; bottom:26px; left:0; right:0; text-align:center; z-index:2;
+    color:var(--gold-soft);
+  }
+  .heritage-copy p{
+    font-size:19px; line-height:1.85; color:var(--ivory-dim); font-weight:300; margin-top:26px;
+    max-width:52ch;
+  }
+  .stat-row{
+    display:flex; gap:56px; margin-top:52px; flex-wrap:wrap;
+  }
+  .stat-row div{border-top:1px solid var(--hair); padding-top:16px; min-width:120px;}
+  .stat-row .num{font-size:34px; color:var(--gold-soft); font-weight:400;}
+  .stat-row .cap{margin-top:6px; color:var(--ivory-dim); opacity:0.75;}
+
+  /* ===== Divider ===== */
+  .divider{
+    display:flex; align-items:center; gap:26px; padding:0 8vw;
+  }
+  .divider .l{flex:1; height:1px; background:linear-gradient(90deg, transparent, var(--hair));}
+  .divider .r{flex:1; height:1px; background:linear-gradient(270deg, transparent, var(--hair));}
+  .divider svg{width:46px; height:28px; flex-shrink:0;}
+
+  /* ===== Membership ===== */
+  .tiers{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:1px;
+    background:var(--hair); border:1px solid var(--hair); margin-top:70px;
+  }
+  .tier{
+    background:var(--noir); padding:56px 40px; position:relative; overflow:hidden;
+    transition:background 0.4s ease;
+  }
+  .tier:hover{background:var(--noir-2);}
+  .tier .tier-no{ color:var(--gold-soft); margin-bottom:26px; display:block; }
+  .tier h3{font-size:29px; font-weight:400; margin-bottom:6px;}
+  .tier .price{color:var(--ivory-dim); font-style:italic; font-weight:300; margin-bottom:24px; display:block;}
+  .tier ul{list-style:none;}
+  .tier li{
+    font-size:16.5px; font-weight:300; color:var(--ivory-dim);
+    padding:11px 0; border-top:1px solid rgba(241,236,225,0.08);
+    display:flex; gap:10px;
+  }
+  .tier li:first-child{border-top:none;}
+  .tier li::before{content:'—'; color:var(--gold);}
+  .tier.featured .tier-no{color:var(--gold);}
+  .tier.featured{
+    background:
+      linear-gradient(165deg, rgba(23,35,28,0.88), rgba(18,17,14,0.94)),
+      url("{{ url_for('static', filename='assets/tex_quilted_leather.jpg') }}");
+    background-size:auto, 480px;
+  }
+
+  /* ===== Locations ===== */
+  .loc-grid{
+    display:grid; grid-template-columns:1.1fr 0.9fr; gap:2px; margin-top:70px;
+    border:1px solid var(--hair);
+  }
+  .loc-main{
+    padding:48px; background:var(--noir-2); position:relative;
+  }
+  .loc-main .tag{color:var(--gold-soft); margin-bottom:18px; display:inline-block;}
+  .loc-main h3{font-size:32px; margin-bottom:14px;}
+  .loc-main p{color:var(--ivory-dim); font-weight:300; font-size:17px; line-height:1.8; max-width:46ch;}
+  .loc-list{display:flex; flex-direction:column;}
+  .loc-item{
+    flex:1; padding:28px 40px; display:flex; align-items:center; justify-content:space-between;
+    border-top:1px solid var(--hair); transition:background 0.3s ease;
+  }
+  .loc-item:first-child{border-top:none;}
+  .loc-item:hover{background:rgba(184,148,79,0.06);}
+  .loc-item .city{font-size:22px;}
+  .loc-item .members{color:var(--gold-soft); font-family:'Jost',sans-serif; font-size:11px; letter-spacing:0.16em;}
+
+  /* ===== Fixtures ===== */
+  .fixture-table{margin-top:60px; border-top:1px solid var(--hair);}
+  .fixture-row{
+    display:grid; grid-template-columns:120px 1fr 160px 120px;
+    align-items:center; gap:24px;
+    padding:26px 4px; border-bottom:1px solid var(--hair);
+  }
+  .fixture-row.head{
+    color:var(--gold-soft); padding-bottom:18px;
+  }
+  .fixture-row .date{color:var(--ivory-dim); font-family:'Jost',sans-serif; font-size:11.5px; letter-spacing:0.1em;}
+  .fixture-row .teams{font-size:23px;}
+  .fixture-row .venue{color:var(--ivory-dim); font-weight:300; font-size:16px;}
+  .fixture-row .score{
+    font-family:'Jost',sans-serif; font-size:14px; letter-spacing:0.08em; color:var(--gold-soft); text-align:right;
+  }
+
+  /* ===== Portal mock ===== */
+  .portal{
+    display:grid; grid-template-columns:0.9fr 1.1fr; gap:90px; align-items:center;
+  }
+  .portal-copy p{color:var(--ivory-dim); font-weight:300; font-size:19px; line-height:1.85; margin-top:24px; max-width:48ch;}
+  .portal-feats{margin-top:40px; display:flex; flex-direction:column; gap:18px;}
+  .portal-feats .f{display:flex; gap:16px; align-items:flex-start;}
+  .portal-feats .f .n{
+    font-family:'Jost',sans-serif; color:var(--gold); font-size:12px; letter-spacing:0.1em; padding-top:3px;
+  }
+  .portal-feats .f p{margin:0; font-size:17px; color:var(--ivory-dim); font-weight:300;}
+
+  .card{
+    border:1px solid var(--hair); padding:44px;
+    background:
+      linear-gradient(165deg, rgba(26,24,21,0.94), rgba(18,17,14,0.97)),
+      url("{{ url_for('static', filename='assets/tex_quilted_leather.jpg') }}");
+    background-size:auto, 520px;
+  }
+  .card .card-head{
+    display:flex; justify-content:space-between; align-items:center;
+    padding-bottom:24px; border-bottom:1px solid var(--hair); margin-bottom:28px;
+  }
+  .card .row{
+    display:flex; justify-content:space-between; padding:16px 0; border-bottom:1px solid rgba(241,236,225,0.08);
+    font-size:16.5px; font-weight:300; color:var(--ivory-dim);
+  }
+  .card .row span:last-child{color:var(--ivory);}
+  .card .status{
+    font-family:'Jost',sans-serif; font-size:10px; letter-spacing:0.14em; color:var(--bottle);
+    background:var(--gold-soft); padding:5px 12px; text-transform:uppercase;
+  }
+
+  /* ===== Footer ===== */
+  footer{
+    padding:100px 8vw 50px; border-top:1px solid var(--hair);
+    display:grid; grid-template-columns:1.3fr 1fr 1fr 1fr; gap:60px;
+  }
+  footer .fmark{display:flex; align-items:center; gap:14px; margin-bottom:22px;}
+  footer .fmark svg{width:50px; height:30px;}
+  footer .fmark span{font-family:'Jost',sans-serif; letter-spacing:0.28em; font-size:14px;}
+  footer p{color:var(--ivory-dim); font-weight:300; font-size:15.5px; max-width:32ch; line-height:1.7;}
+  footer h4{
+    font-family:'Jost',sans-serif; font-size:11px; letter-spacing:0.2em; text-transform:uppercase;
+    color:var(--gold-soft); margin-bottom:20px;
+  }
+  footer ul{list-style:none;}
+  footer li{margin-bottom:12px; color:var(--ivory-dim); font-weight:300; font-size:15.5px;}
+  .fbottom{
+    grid-column:1/-1; margin-top:60px; padding-top:24px; border-top:1px solid var(--hair);
+    display:flex; justify-content:space-between; font-family:'Jost',sans-serif; font-size:10.5px;
+    letter-spacing:0.1em; color:rgba(241,236,225,0.4);
+  }
+
+  @media (max-width:880px){
+    .heritage, .portal, .loc-grid{grid-template-columns:1fr;}
+    .tiers{grid-template-columns:1fr;}
+    footer{grid-template-columns:1fr 1fr;}
+    .fixture-row{grid-template-columns:1fr; gap:6px; text-align:left;}
+    .fixture-row .score{text-align:left;}
+    section{padding:100px 6vw;}
+  }
+
+  .reveal{opacity:0; transform:translateY(24px); transition:opacity 0.9s ease, transform 0.9s ease;}
+  .reveal.in{opacity:1; transform:translateY(0);}
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    .reveal{opacity:1; transform:none; transition:none;}
+    .crest, .scroll-cue .line{animation:none;}
+  }
+
+  a:focus-visible, button:focus-visible{
+    outline:1px solid var(--gold); outline-offset:3px;
+  }
+</style>
+</head>
+<body>
+
+<!-- SVG Crest Logo Symbol -->
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="crest-mark" viewBox="0 0 100 60">
+    <ellipse cx="41" cy="30" rx="33" ry="20" fill="none" stroke="#B8944F" stroke-width="1.3"/>
+    <ellipse cx="59" cy="30" rx="33" ry="20" fill="none" stroke="#B8944F" stroke-width="1.3"/>
+  </symbol>
+</svg>
+
+<!-- Header Nav Bar -->
+<nav id="nav" class="main-nav">
+  <div class="nav-left">
+    <a href="{{ url_for('index') }}" class="nav-mark">
+      <svg viewBox="0 0 100 60"><use href="#crest-mark"/></svg>
+      <span>COUNTRY S.C.</span>
+    </a>
+  </div>
+
+  <div class="nav-links">
+    <a href="{{ url_for('index') }}">Home</a>
+
+    <!-- Management Dropdown -->
+    <div class="dropdown">
+      <a href="#" class="dropbtn">Management <span class="arrow">▾</span></a>
+      <div class="dropdown-content">
+        <a href="{{ url_for('show_locations') }}">Locations</a>
+        <a href="{{ url_for('show_members') }}">Club Members</a>
+        <a href="{{ url_for('show_personnel') }}">Personnel</a>
+        <a href="{{ url_for('show_family_members') }}">Family Members</a>
+        <a href="{{ url_for('show_teams') }}">Teams</a>
+        <a href="{{ url_for('show_formations') }}">Team Formations</a>
+        <a href="{{ url_for('show_family_relationships') }}">Family Relationships</a>
+        <a href="{{ url_for('show_hobbies') }}">Hobbies</a>
+      </div>
+    </div>
+
+    <!-- Operations Dropdown -->
+    <div class="dropdown">
+      <a href="#" class="dropbtn">Operations <span class="arrow">▾</span></a>
+      <div class="dropdown-content">
+        <a href="{{ url_for('assign_member') }}">Assign Member</a>
+        <a href="{{ url_for('payments') }}">Payments</a>
+        <a href="{{ url_for('show_formation_players') }}">Formation Players</a>
+        <a href="{{ url_for('show_member_hobbies') }}">Member Hobbies</a>
+        <a href="{{ url_for('show_personnel_assignments') }}">Personnel Assignments</a>
+      </div>
+    </div>
+
+    <!-- Reports Dropdown -->
+    <div class="dropdown">
+      <a href="#" class="dropbtn">Reports <span class="arrow">▾</span></a>
+      <div class="dropdown-content">
+        <a href="{{ url_for('fifa_reports') }}">FIFA Reports</a>
+        <a href="{{ url_for('formation_reports') }}">Formation Reports</a>
+        <a href="{{ url_for('member_reports') }}">Member Reports</a>
+      </div>
+    </div>
+
+    <!-- System Dropdown -->
+    <div class="dropdown">
+      <a href="#" class="dropbtn">System <span class="arrow">▾</span></a>
+      <div class="dropdown-content">
+        <a href="{{ url_for('show_email_logs') }}">Email Logs</a>
+        <a href="{{ url_for('trigger_demo') }}">Trigger Demo</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-right">
+    <a href="#membership" class="nav-cta">Member Portal</a>
+  </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero" style="padding-top:0; min-height:100vh;">
+  <div class="quilt"></div>
+  <svg class="crest" viewBox="0 0 100 60"><use href="#crest-mark"/></svg>
+  <div class="est">Established MCMXXVI · A Century in the Game</div>
+  <h1>The quiet<br><em>discipline</em> of<br>a century's game.</h1>
+  <div class="hero-rule"></div>
+  <p class="sub">Country Soccer Club has kept one record since 1921: every member, every match, every season, held with the same care as the first. Membership is by record, not by request.</p>
+  <div class="hero-actions">
+    <a class="btn-gold" href="#membership">Request Membership</a>
+    <a class="btn-line" href="#heritage">Our Heritage</a>
+  </div>
+  <div class="scroll-cue"><span>Scroll</span><div class="line"></div></div>
+</section>
+
+<!-- Heritage Section -->
+<section id="heritage">
+  <div class="heritage reveal">
+    <div class="heritage-visual">
+      <div class="yr-cap label">One Club, Every Branch</div>
+    </div>
+    <div class="heritage-copy">
+      <div class="eyebrow label">Heritage</div>
+      <h2 class="title">Kept the same way <em>since 1921</em></h2>
+      <p>Founded at a single ground and now standing across several branches, Country Soccer Club has never treated its records as paperwork. Every member's arrival, every family's registration, every match played — entered once, and never lost.</p>
+      <p>A member who joined as a child and returns as a parent finds the same ledger, unbroken. That continuity, more than any trophy, is what the mark stands for.</p>
+      <div class="stat-row">
+        <div><div class="num">100+</div><div class="label cap">Years of Record</div></div>
+        <div><div class="num">6</div><div class="label cap">Locations</div></div>
+        <div><div class="num">2</div><div class="label cap">Founding Codes<br>Boys &amp; Girls</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><div class="l"></div><svg viewBox="0 0 100 60"><use href="#crest-mark"/></svg><div class="r"></div></div>
+
+<!-- Membership Tiers Section -->
+<section id="membership">
+  <div class="reveal">
+    <div class="eyebrow label">Membership</div>
+    <h2 class="title">Three ways to <em>belong</em></h2>
+  </div>
+  <div class="tiers reveal">
+    <div class="tier">
+      <span class="tier-no label">I — Minor</span>
+      <h3>Junior Member</h3>
+      <span class="price">$100 annually · Ages 4–17</span>
+      <ul>
+        <li>Registered under one family member</li>
+        <li>Full access to club hobbies programme</li>
+        <li>Eligible for team formation from age 4</li>
+        <li>Progress record kept for life</li>
+      </ul>
+    </div>
+    <div class="tier featured">
+      <span class="tier-no label">II — Major</span>
+      <h3>Senior Member</h3>
+      <span class="price">$200 annually · Age 18+</span>
+      <ul>
+        <li>Full voting standing at club level</li>
+        <li>Eligible for every FIFA fixture</li>
+        <li>Transferable between branches</li>
+        <li>Instalment payment, up to four terms</li>
+      </ul>
+    </div>
+    <div class="tier">
+      <span class="tier-no label">III — Family</span>
+      <h3>Family Patron</h3>
+      <span class="price">By registration · No fee</span>
+      <ul>
+        <li>Registers and accompanies minor members</li>
+        <li>Relationship recorded — parent to guardian</li>
+        <li>May hold standing at more than one branch</li>
+        <li>Notified of every fixture by post</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><div class="l"></div><svg viewBox="0 0 100 60"><use href="#crest-mark"/></svg><div class="r"></div></div>
+
+<!-- Locations Overview Section -->
+<section id="locations">
+  <div class="reveal">
+    <div class="eyebrow label">Locations</div>
+    <h2 class="title">One head, <em>several homes</em></h2>
+  </div>
+  <div class="loc-grid reveal">
+    <div class="loc-main">
+      <span class="tag label">Head Location</span>
+      <h3>Montréal — Mount Royal Grounds</h3>
+      <p>Seat of the President and General Manager, and home to the Deputy Manager, Treasurer, Secretary and Administrators who keep the club's single record. Capacity for 480 active members.</p>
+    </div>
+    <div class="loc-list">
+      <div class="loc-item"><span class="city">Laval</span><span class="members label">214 Members</span></div>
+      <div class="loc-item"><span class="city">Longueuil</span><span class="members label">176 Members</span></div>
+      <div class="loc-item"><span class="city">Kanata North</span><span class="members label">98 Members</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><div class="l"></div><svg viewBox="0 0 100 60"><use href="#crest-mark"/></svg><div class="r"></div></div>
+
+<!-- Fixtures Schedule Section -->
+<section id="fixtures">
+  <div class="reveal">
+    <div class="eyebrow label">Fixtures</div>
+    <h2 class="title">This week's <em>formations</em></h2>
+  </div>
+  <div class="fixture-table reveal">
+    <div class="fixture-row head label">
+      <span>Date</span><span>Fixture</span><span>Venue</span><span style="text-align:right">Score</span>
+    </div>
+    <div class="fixture-row">
+      <span class="date">18 Jul<br>2:00 PM</span>
+      <span class="teams">Montréal Group 6 <em style="color:var(--ivory-dim); font-style:italic;">vs</em> Laval Group 3</span>
+      <span class="venue">Mount Royal Grounds</span>
+      <span class="score">Training</span>
+    </div>
+    <div class="fixture-row">
+      <span class="date">19 Jul<br>10:30 AM</span>
+      <span class="teams">Longueuil U16 <em style="color:var(--ivory-dim); font-style:italic;">vs</em> Kanata North U16</span>
+      <span class="venue">Longueuil Pitch</span>
+      <span class="score">2 — 1</span>
+    </div>
+    <div class="fixture-row">
+      <span class="date">21 Jul<br>4:00 PM</span>
+      <span class="teams">Montréal Girls A <em style="color:var(--ivory-dim); font-style:italic;">vs</em> Laval Girls A</span>
+      <span class="venue">Mount Royal Grounds</span>
+      <span class="score">Game</span>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><div class="l"></div><svg viewBox="0 0 100 60"><use href="#crest-mark"/></svg><div class="r"></div></div>
+
+<!-- Member Portal Mockup Section -->
+<section id="portal">
+  <div class="portal reveal">
+    <div class="portal-copy">
+      <div class="eyebrow label">Member Portal</div>
+      <h2 class="title">Your record, <em>held privately</em></h2>
+      <p>Every member's standing — dues, fixtures, family, progress — sits behind one quiet interface. No clutter, no noise. Just what's true, and what's next.</p>
+      <div class="portal-feats">
+        <div class="f"><span class="n">01</span><p>Membership status and payment history, always current</p></div>
+        <div class="f"><span class="n">02</span><p>Automatic notice of every fixture, sent the Sunday prior</p></div>
+        <div class="f"><span class="n">03</span><p>A lifetime FIFA fixture record, held from first match to last</p></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <div class="label" style="color:var(--gold-soft); margin-bottom:6px;">Membership No.</div>
+          <div style="font-size:26px;">CSC — 004471</div>
+        </div>
+        <span class="status">Active</span>
+      </div>
+      <div class="row"><span>Member</span><span>É. Whitfield-Roy</span></div>
+      <div class="row"><span>Location</span><span>Montréal — Head</span></div>
+      <div class="row"><span>Standing</span><span>Senior, since 2011</span></div>
+      <div class="row"><span>2026 Dues</span><span>Paid in full — 2 instalments</span></div>
+      <div class="row"><span>Next Fixture</span><span>21 Jul, Mount Royal Grounds</span></div>
+      <div class="row" style="border-bottom:none;"><span>FIFA Fixtures</span><span>37 played, since 2019</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div>
+    <div class="fmark">
+      <svg viewBox="0 0 100 60"><use href="#crest-mark"/></svg>
+      <span>COUNTRY S.C.</span>
+    </div>
+    <p>A nonprofit soccer club, keeping one continuous record of its members since 1921, across every branch it has since opened.</p>
+  </div>
+  <div>
+    <h4>Club</h4>
+    <ul><li>Heritage</li><li>Membership</li><li>Locations</li><li>Governance</li></ul>
+  </div>
+  <div>
+    <h4>Members</h4>
+    <ul><li>Member Portal</li><li>Fixtures</li><li>Payments</li><li>Family Registration</li></ul>
+  </div>
+  <div>
+    <h4>Enquiries</h4>
+    <ul><li>membership@countrysc.example</li><li>+1 514 000 0000</li><li>Mount Royal Grounds, Montréal</li></ul>
+  </div>
+  <div class="fbottom">
+    <span>© 1921 — 2026 Country Soccer Club</span>
+    <span>Est. Montréal</span>
+  </div>
+</footer>
+
+<script>
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+  });
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>

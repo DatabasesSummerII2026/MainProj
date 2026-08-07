@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block title %}
+Team Formations — Country Soccer Club
+{% endblock %}
+
+{% block content %}
+<style>
+
+  .header-action-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--hair);
+  }
+
+  .header-action-bar .title-group {
+    max-width: 70%;
+  }
+
+ 
+  .formation-btn {
+    font-family: 'Jost', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    border: 1px solid var(--gold);
+    color: var(--gold-soft);
+    background: transparent;
+    padding: 12px 28px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .formation-btn:hover {
+    background: var(--gold);
+    color: var(--noir);
+    transform: translateY(-1px);
+  }
+
+  
+  .csc-table .cell-id {
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    color: var(--gold-soft);
+    font-weight: 500;
+  }
+
+  .csc-table .cell-type {
+    font-family: 'Jost', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .csc-table .cell-score {
+    text-align: center;
+    font-family: 'Jost', sans-serif;
+    letter-spacing: 0.05em;
+  }
+
+ 
+  .empty-state {
+    text-align: center;
+    padding: 48px 24px;
+    color: var(--ivory-dim);
+    font-style: italic;
+  }
+</style>
+
+<div class="csc-card">
+ 
+  <div class="header-action-bar">
+    <div class="title-group">
+      <div class="label" style="color:var(--gold-soft)">
+        Formation Management
+      </div>
+      <h1 class="csc-title">
+        Team <em>Formations</em>
+      </h1>
+      <p style="color:var(--ivory-dim); font-size:17px; margin-top: 4px;">
+        Manage training and game sessions assigned to teams.
+      </p>
+    </div>
+
+    <div>
+      <a href="{{ url_for('add_formation') }}" class="formation-btn">
+        <span>+</span> Create Formation
+      </a>
+    </div>
+  </div>
+
+
+  <table class="csc-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Team</th>
+        <th>Gender</th>
+        <th>Head Coach</th>
+        <th>Date</th>
+        <th>Type</th>
+        <th>Address</th>
+        <th style="text-align: center;">Score</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for f in formations %}
+      <tr>
+        <td class="cell-id">#{{ f.formationID }}</td>
+        <td>{{ f.teamName }}</td>
+        <td>{{ f.gender }}</td>
+        <td>{{ f.headCoach }}</td>
+        <td>{{ f.startDateTime }}</td>
+        <td class="cell-type">{{ f.sessionType }}</td>
+        <td>{{ f.address }}</td>
+        <td class="cell-score">
+          {% if f.score %}
+            <strong>{{ f.score }}</strong>
+          {% else %}
+            <span style="opacity: 0.4;">—</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="8" class="empty-state">
+          No team formations registered yet. Click <strong>+ Create Formation</strong> to add one.
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

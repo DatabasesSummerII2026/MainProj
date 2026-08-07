@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block title %}Locations — Country Soccer Club{% endblock %}
+
+{% block content %}
+<!-- Header Banner Card -->
+<div class="csc-card">
+    <div class="label" style="color:var(--gold-soft); margin-bottom:8px;">Club Registry</div>
+    <h1 class="csc-title">Our <em>Locations</em></h1>
+    <p style="color:var(--ivory-dim); font-size:18px;">All registered branches and grounds across the club network.</p>
+</div>
+
+<!-- Add New Location Form -->
+<div class="csc-card">
+    <div class="label" style="color:var(--gold-soft); margin-bottom:12px;">Add New Location</div>
+    <form action="{{ url_for('add_location') }}" method="POST" style="display:grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+        <div>
+            <label class="label">Location Name</label>
+            <input type="text" name="name" class="csc-input" required>
+        </div>
+        <div>
+            <label class="label">Type</label>
+            <select name="type" class="csc-select" required>
+                
+                <option value="Head">Head</option>
+                <option value="Branch">Branch</option>
+            </select>
+        </div>
+        <div>
+            <label class="label">Capacity</label>
+            <input type="number" name="capacity" class="csc-input" required>
+        </div>
+        <div>
+            <label class="label">Address</label>
+            <input type="text" name="address" class="csc-input" required>
+        </div>
+        <div>
+            <label class="label">City</label>
+            <input type="text" name="city" class="csc-input" required>
+        </div>
+        <div>
+            <label class="label">Province</label>
+            <input type="text" name="province" class="csc-input" required>
+        </div>
+        <div>
+            <label class="label">Postal Code</label>
+            
+            <input type="text" name="postalCode" class="csc-input" required>
+        </div>
+        <div>
+            <label class="label">Phone</label>
+            
+            <input type="text" name="phone" class="csc-input">
+        </div>
+        <div>
+            <label class="label">Website</label>
+        
+            <input type="url" name="webAddress" class="csc-input" placeholder="https://">
+        </div>
+        <div>
+            <label class="label">Manager ID (Optional)</label>
+          
+            <input type="number" name="managerID" class="csc-input" placeholder="Personnel ID">
+        </div>
+        <div style="grid-column: 1 / -1; text-align: right; margin-top: 10px;">
+            <button type="submit" class="csc-btn">Record Location</button>
+        </div>
+    </form>
+</div>
+
+<!-- Locations Data Table -->
+<div class="csc-card">
+    <table class="csc-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Address</th>
+                <th>Phone</th>
+                <th>Capacity</th>
+                <th>Manager ID</th>
+                <th>Website</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for loc in locations %}
+            <tr>
+                <td>CSC-{{ loc.locationID }}</td>
+                <td style="color:var(--ivory); font-weight:500;">{{ loc.name }}</td>
+                <td><span class="label" style="color:var(--gold-soft);">{{ loc.type }}</span></td>
+                <td>{{ loc.address }}, {{ loc.city }}, {{ loc.province }} {{ loc.postalCode }}</td>
+               
+                <td>{{ loc.phones or 'N/A' }}</td>
+                <td>{{ loc.capacity }}</td>
+               
+                <td>{{ loc.managerID or 'None' }}</td>
+                <td>
+                    {% if loc.webAddress %}
+                        <a href="{{ url_for('index') }}" target="_blank" style="color:var(--gold-soft); border-bottom:1px solid var(--gold);">Visit</a>
+                    {% else %}
+                        —
+                    {% endif %}
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="8" style="text-align:center;">No locations registered in ledger.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

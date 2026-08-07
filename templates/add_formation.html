@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Create Formation
+{% endblock %}
+
+
+
+{% block content %}
+
+
+<div class="csc-card">
+
+
+<h1 class="csc-title">
+Create <em>Formation</em>
+</h1>
+
+
+
+<form method="POST">
+
+
+<label>
+Session ID
+</label>
+
+<input 
+class="csc-input"
+name="sessionID"
+required>
+
+
+
+<label>
+Team ID
+</label>
+
+<input 
+class="csc-input"
+name="teamID"
+required>
+
+
+
+<label>
+Head Coach ID
+</label>
+
+<input 
+class="csc-input"
+name="headCoachID"
+required>
+
+
+
+<label>
+Score
+</label>
+
+<input 
+class="csc-input"
+name="score"
+placeholder="Leave empty for future session">
+
+
+
+<br><br>
+
+
+<button class="csc-btn">
+Create
+</button>
+
+
+</form>
+
+
+</div>
+
+
+{% endblock %}

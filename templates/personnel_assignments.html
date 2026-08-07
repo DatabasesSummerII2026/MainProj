@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Personnel Assignments — Country Soccer Club
+{% endblock %}
+
+
+
+{% block content %}
+
+
+
+<div class="csc-card">
+
+
+<div class="label"
+style="color:var(--gold-soft);">
+Staff Management
+</div>
+
+
+<h1 class="csc-title">
+Personnel <em>Assignments</em>
+</h1>
+
+
+<p style="color:var(--ivory-dim);font-size:18px;">
+Personnel location assignment history.
+</p>
+
+
+
+<table class="csc-table">
+
+
+<thead>
+
+<tr>
+
+<th>Personnel</th>
+
+<th>Role</th>
+
+<th>Location</th>
+
+<th>Start Date</th>
+
+<th>End Date</th>
+
+</tr>
+
+</thead>
+
+
+
+<tbody>
+
+
+
+{% for a in assignments %}
+
+
+<tr>
+
+
+<td>
+{{a.personnelName}}
+</td>
+
+
+<td>
+{{a.role}}
+</td>
+
+
+<td>
+
+{{a.address}}
+
+<br>
+
+{{a.city}}, {{a.province}}
+
+</td>
+
+
+<td>
+{{a.startDate}}
+</td>
+
+
+<td>
+
+{% if a.endDate %}
+
+{{a.endDate}}
+
+{% else %}
+
+Active
+
+{% endif %}
+
+</td>
+
+
+</tr>
+
+
+
+{% else %}
+
+
+<tr>
+
+<td colspan="5">
+No assignments found.
+</td>
+
+</tr>
+
+
+{% endfor %}
+
+
+
+</tbody>
+
+
+</table>
+
+
+
+</div>
+
+
+
+{% endblock %}

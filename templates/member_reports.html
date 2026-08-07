@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Member Reports — Country Soccer Club
+{% endblock %}
+
+
+
+{% block content %}
+
+
+<div class="csc-card">
+
+
+<div class="label" style="color:var(--gold-soft);">
+    Reports
+</div>
+
+
+<h1 class="csc-title">
+    Member <em>Statistics</em>
+</h1>
+
+
+<p style="color:var(--ivory-dim); font-size:18px;">
+    Overview of club membership statistics.
+</p>
+
+
+
+<div style="
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:30px;
+margin-top:40px;
+">
+
+
+<div class="csc-card">
+
+<h2>
+{{report.totalMembers}}
+</h2>
+
+<p>
+Total Members
+</p>
+
+</div>
+
+
+
+<div class="csc-card">
+
+<h2>
+{{report.boys}}
+</h2>
+
+<p>
+Boys Members
+</p>
+
+</div>
+
+
+
+<div class="csc-card">
+
+<h2>
+{{report.girls}}
+</h2>
+
+<p>
+Girls Members
+</p>
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+{% endblock %}

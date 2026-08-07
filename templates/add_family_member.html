@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+
+<div class="csc-card">
+
+
+<h1 class="csc-title">
+Add <em>Family Member</em>
+</h1>
+
+
+<form method="POST">
+
+
+<label>First Name</label>
+<input class="csc-input" name="firstName">
+
+
+<label>Last Name</label>
+<input class="csc-input" name="lastName">
+
+
+<label>Date of Birth</label>
+<input class="csc-input" type="date" name="DOB">
+
+
+<label>SSN</label>
+<input class="csc-input" name="SSN">
+
+
+<label>Medicare Number</label>
+<input class="csc-input" name="medicareNo">
+
+
+<label>Phone</label>
+<input class="csc-input" name="phone">
+
+
+<label>Address</label>
+<input class="csc-input" name="address">
+
+
+<label>City</label>
+<input class="csc-input" name="city">
+
+
+<label>Province</label>
+<input class="csc-input" name="province">
+
+
+<label>Postal Code</label>
+<input class="csc-input" name="postalCode">
+
+
+<label>Email</label>
+<input class="csc-input" name="email">
+
+
+<label>Family Type</label>
+
+<select class="csc-select" name="familyType">
+
+<option value="Primary">
+Primary
+</option>
+
+<option value="Secondary">
+Secondary
+</option>
+
+</select>
+
+
+<br><br>
+
+
+<button class="csc-btn">
+Create
+</button>
+
+
+</form>
+
+
+</div>
+
+
+{% endblock %}

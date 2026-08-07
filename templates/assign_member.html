@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}
+Assign Member — Country Soccer Club
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="csc-card">
+
+    <div class="label" style="color:var(--gold-soft);">
+        Operations
+    </div>
+
+
+    <h1 class="csc-title">
+        Assign <em>Member</em>
+    </h1>
+
+
+    <p style="color:var(--ivory-dim); font-size:18px;">
+        Manage member team assignments and registration periods.
+    </p>
+
+
+
+    <table class="csc-table">
+
+        <tr>
+
+            <th>
+                Member
+            </th>
+
+            <th>
+                Team
+            </th>
+
+            <th>
+                Gender
+            </th>
+
+            <th>
+                Start Date
+            </th>
+
+            <th>
+                End Date
+            </th>
+
+        </tr>
+
+
+        {% for a in assignments %}
+
+        <tr>
+
+            <td>
+                {{a.firstName}} {{a.lastName}}
+            </td>
+
+
+            <td>
+                {{a.teamName}}
+            </td>
+
+
+            <td>
+                {{a.gender}}
+            </td>
+
+
+            <td>
+                {{a.startDate}}
+            </td>
+
+
+            <td>
+                {{a.endDate or "Active"}}
+            </td>
+
+
+        </tr>
+
+
+        {% else %}
+
+        <tr>
+            <td colspan="5">
+                No assignments found.
+            </td>
+        </tr>
+
+        {% endfor %}
+
+
+    </table>
+
+
+</div>
+
+
+{% endblock %}

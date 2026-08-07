@@ -1,0 +1,309 @@
+{% extends "base.html" %}
+
+{% block title %}
+Members — Country Soccer Club
+{% endblock %}
+
+
+{% block content %}
+
+<div class="csc-card">
+
+
+    <!-- Header -->
+    <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+
+        <div>
+
+            <div class="label" style="color:var(--gold-soft); margin-bottom:8px;">
+                Ledger
+            </div>
+
+
+            <h1 class="csc-title">
+                Club <em>Members</em>
+            </h1>
+
+
+            <p style="color:var(--ivory-dim); font-size:18px;">
+                Active registered membership ledger since 1921.
+            </p>
+
+        </div>
+
+
+        <button class="csc-btn" onclick="toggleAddForm()">
+            + Register New Member
+        </button>
+
+
+    </div>
+
+
+
+    <!-- Add Member Form -->
+    <div id="addForm" style="display:none; margin-top:40px;">
+
+
+        <h2 style="color:var(--gold-soft);">
+            Register New Member
+        </h2>
+
+
+        <form method="POST" action="/add_member">
+
+
+            <input class="csc-input" 
+                   name="firstName"
+                   placeholder="First Name">
+
+
+            <input class="csc-input"
+                   name="lastName"
+                   placeholder="Last Name">
+
+
+            <input class="csc-input"
+                   type="date"
+                   name="DOB">
+
+
+            <select class="csc-select"
+                    name="gender">
+
+                <option value="Boys">
+                    Boys
+                </option>
+
+                <option value="Girls">
+                    Girls
+                </option>
+
+            </select>
+
+
+
+            <input class="csc-input"
+                   name="phone"
+                   placeholder="Phone">
+
+
+            <input class="csc-input"
+                   name="email"
+                   placeholder="Email">
+
+
+
+            <input class="csc-input"
+                   name="SSN"
+                   placeholder="SSN">
+
+
+            <input class="csc-input"
+                   name="medicareNo"
+                   placeholder="Medicare Number">
+
+
+
+            <input class="csc-input"
+                   name="address"
+                   placeholder="Address">
+
+
+            <input class="csc-input"
+                   name="city"
+                   placeholder="City">
+
+
+            <input class="csc-input"
+                   name="province"
+                   placeholder="Province">
+
+
+            <input class="csc-input"
+                   name="postalCode"
+                   placeholder="Postal Code">
+
+
+            <input class="csc-input"
+                   type="date"
+                   name="registrationDate">
+
+
+
+            <button class="csc-btn" type="submit">
+                Save Member
+            </button>
+
+
+        </form>
+
+
+    </div>
+
+
+
+
+
+    <!-- Members Table -->
+
+    <table class="csc-table">
+
+
+        <thead>
+
+            <tr>
+
+                <th>ID</th>
+
+                <th>Name</th>
+
+                <th>DOB</th>
+
+                <th>Gender</th>
+
+                <th>Phone</th>
+
+                <th>Email</th>
+
+                <th>Registration Date</th>
+
+                <th>Action</th>
+
+
+            </tr>
+
+
+        </thead>
+
+
+
+        <tbody>
+
+
+        {% for m in members %}
+
+
+            <tr>
+
+
+                <td>
+                    {{m.memberID}}
+                </td>
+
+
+
+                <td>
+                    {{m.firstName}}
+                    {{m.lastName}}
+                </td>
+
+
+
+                <td>
+                    {{m.DOB}}
+                </td>
+
+
+
+                <td>
+                    {{m.gender}}
+                </td>
+
+
+
+                <td>
+                    {{m.phone}}
+                </td>
+
+
+
+                <td>
+                    {{m.email}}
+                </td>
+
+
+
+                <td>
+                    {{m.registrationDate}}
+                </td>
+
+
+
+                <td>
+
+                    <a href="/delete_member/{{m.memberID}}"
+                       class="csc-btn"
+                       style="padding:8px 14px;">
+                       
+                       Delete
+
+                    </a>
+
+
+                </td>
+
+
+
+            </tr>
+
+
+
+        {% else %}
+
+
+            <tr>
+
+                <td colspan="8">
+                    No members found.
+                </td>
+
+            </tr>
+
+
+
+        {% endfor %}
+
+
+
+        </tbody>
+
+
+    </table>
+
+
+
+</div>
+
+
+
+
+
+<script>
+
+
+function toggleAddForm(){
+
+    let form = document.getElementById("addForm");
+
+
+    if(form.style.display === "none"){
+
+        form.style.display="block";
+
+    }
+
+    else{
+
+        form.style.display="none";
+
+    }
+
+}
+
+
+</script>
+
+
+
+{% endblock %}

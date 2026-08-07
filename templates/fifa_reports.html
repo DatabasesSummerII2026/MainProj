@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+FIFA Reports — Country Soccer Club
+{% endblock %}
+
+
+
+{% block content %}
+
+
+<div class="csc-card">
+
+
+<div class="label" style="color:var(--gold-soft);">
+Reports
+</div>
+
+
+<h1 class="csc-title">
+FIFA <em>Match Reports</em>
+</h1>
+
+
+<p style="color:var(--ivory-dim); font-size:18px;">
+International match performance overview.
+</p>
+
+
+
+
+<div style="
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:25px;
+margin-top:40px;
+">
+
+
+<div class="csc-card">
+<h2>
+{{report.summary.totalGames}}
+</h2>
+<p>Total Games</p>
+</div>
+
+
+
+<div class="csc-card">
+<h2>
+{{report.summary.wins}}
+</h2>
+<p>Wins</p>
+</div>
+
+
+
+<div class="csc-card">
+<h2>
+{{report.summary.draws}}
+</h2>
+<p>Draws</p>
+</div>
+
+
+
+<div class="csc-card">
+<h2>
+{{report.summary.losses}}
+</h2>
+<p>Losses</p>
+</div>
+
+
+</div>
+
+
+
+
+
+<table class="csc-table">
+
+
+<tr>
+
+<th>
+Date
+</th>
+
+<th>
+Location
+</th>
+
+<th>
+Team
+</th>
+
+<th>
+Opponent
+</th>
+
+<th>
+Score
+</th>
+
+</tr>
+
+
+
+
+{% for g in report.games %}
+
+
+<tr>
+
+
+<td>
+{{g.gameDate}}
+</td>
+
+
+<td>
+{{g.gameLocation}}
+</td>
+
+
+<td>
+{{g.teamWith}}
+</td>
+
+
+<td>
+{{g.teamAgainst}}
+</td>
+
+
+<td>
+{{g.scoreWith}} - {{g.scoreAgainst}}
+</td>
+
+
+</tr>
+
+
+{% endfor %}
+
+
+
+</table>
+
+
+
+</div>
+
+
+{% endblock %}

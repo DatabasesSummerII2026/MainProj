@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+
+{% block title %}Teams — Country Soccer Club{% endblock %}
+
+
+{% block content %}
+
+
+<div class="csc-card">
+
+    <div class="label" style="color:var(--gold-soft); margin-bottom:8px;">
+        Team Registry
+    </div>
+
+    <h1 class="csc-title">
+        Club <em>Teams</em>
+    </h1>
+
+    <p style="color:var(--ivory-dim); font-size:18px;">
+        Registered teams across Country Soccer Club.
+    </p>
+
+</div>
+
+
+
+<div class="csc-card">
+
+<table class="csc-table">
+
+<thead>
+
+<tr>
+    <th>Team ID</th>
+    <th>Team Name</th>
+    <th>Gender</th>
+    <th>Location</th>
+</tr>
+
+</thead>
+
+
+<tbody>
+
+{% for t in teams %}
+
+<tr>
+
+<td>
+    CSC-T{{ t.teamID }}
+</td>
+
+
+<td style="color:var(--ivory); font-weight:500;">
+    {{ t.teamName }}
+</td>
+
+
+<td>
+    <span class="label">
+        {{ t.gender }}
+    </span>
+</td>
+
+
+<td>
+    {% if t.locationName %}
+        {{ t.locationName }}
+    {% else %}
+        N/A
+    {% endif %}
+</td>
+
+
+</tr>
+
+
+{% else %}
+
+<tr>
+<td colspan="4" style="text-align:center;">
+    No teams registered.
+</td>
+</tr>
+
+{% endfor %}
+
+
+</tbody>
+
+</table>
+
+</div>
+
+
+{% endblock %}

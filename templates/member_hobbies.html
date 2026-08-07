@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Member Hobbies — Country Soccer Club
+{% endblock %}
+
+
+
+{% block content %}
+
+
+
+<div class="csc-card">
+
+
+<div class="label"
+style="color:var(--gold-soft);">
+Member Profiles
+</div>
+
+
+<h1 class="csc-title">
+Member <em>Hobbies</em>
+</h1>
+
+
+<p style="color:var(--ivory-dim);font-size:18px;">
+Personal interests registered by club members.
+</p>
+
+
+
+<table class="csc-table">
+
+
+<thead>
+
+<tr>
+
+<th>Member</th>
+
+<th>Hobby</th>
+
+</tr>
+
+</thead>
+
+
+
+<tbody>
+
+
+
+{% for h in hobbies %}
+
+
+<tr>
+
+
+<td>
+{{h.memberName}}
+</td>
+
+
+<td>
+{{h.hobbyName}}
+</td>
+
+
+</tr>
+
+
+
+{% else %}
+
+
+<tr>
+
+<td colspan="2">
+No hobby records found.
+</td>
+
+</tr>
+
+
+{% endfor %}
+
+
+
+</tbody>
+
+
+</table>
+
+
+
+</div>
+
+
+
+{% endblock %}

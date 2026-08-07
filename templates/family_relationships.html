@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Family Relationships — Country Soccer Club
+{% endblock %}
+
+
+
+{% block content %}
+
+
+
+<div class="csc-card">
+
+
+<div class="label"
+style="color:var(--gold-soft);">
+Member Relations
+</div>
+
+
+<h1 class="csc-title">
+Family <em>Relationships</em>
+</h1>
+
+
+<p style="color:var(--ivory-dim);font-size:18px;">
+Registered family connections associated with club members.
+</p>
+
+
+
+<table class="csc-table">
+
+
+<thead>
+
+<tr>
+
+<th>Club Member</th>
+
+<th>Family Member</th>
+
+<th>Relationship</th>
+
+<th>Start Date</th>
+
+<th>End Date</th>
+
+</tr>
+
+</thead>
+
+
+
+<tbody>
+
+
+{% for r in relationships %}
+
+
+<tr>
+
+
+<td>
+{{r.memberName}}
+</td>
+
+
+<td>
+{{r.familyName}}
+</td>
+
+
+<td>
+{{r.relationshipType}}
+</td>
+
+
+<td>
+{{r.startDate}}
+</td>
+
+
+<td>
+
+{% if r.endDate %}
+
+{{r.endDate}}
+
+{% else %}
+
+Active
+
+{% endif %}
+
+
+</td>
+
+
+</tr>
+
+
+
+{% else %}
+
+
+<tr>
+
+<td colspan="5">
+No relationships found.
+</td>
+
+</tr>
+
+
+{% endfor %}
+
+
+
+</tbody>
+
+
+</table>
+
+
+
+</div>
+
+
+
+{% endblock %}

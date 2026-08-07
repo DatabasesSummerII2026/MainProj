@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+
+<div class="csc-card">
+
+
+<h1 class="csc-title">
+Personnel <em>Management</em>
+</h1>
+
+
+<p>
+Manage all club personnel including coaches,
+administrators and assistants.
+</p>
+
+
+
+<table class="csc-table">
+
+
+<thead>
+
+<tr>
+
+<th>ID</th>
+
+<th>Name</th>
+
+<th>Role</th>
+
+<th>Mandate</th>
+
+<th>Title</th>
+
+<th>Telephone</th>
+
+<th>Email</th>
+
+<th>Location</th>
+
+</tr>
+
+</thead>
+
+
+
+<tbody>
+
+
+{% for p in personnel %}
+
+
+<tr>
+
+
+<td>
+{{p.personnelID}}
+</td>
+
+
+<td>
+{{p.firstName}} {{p.lastName}}
+</td>
+
+
+<td>
+{{p.role}}
+</td>
+
+
+<td>
+{{p.mandate}}
+</td>
+
+
+<td>
+{{p.title}}
+</td>
+
+
+<td>
+{{p.telephone}}
+</td>
+
+
+<td>
+{{p.email}}
+</td>
+
+
+<td>
+{{p.city}}, {{p.province}}
+</td>
+
+
+
+</tr>
+
+
+{% endfor %}
+
+
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+
+
+{% endblock %}

@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Formation Reports — Country Soccer Club
+{% endblock %}
+
+
+
+{% block content %}
+
+
+<div class="csc-card">
+
+
+<div class="label" style="color:var(--gold-soft);">
+Reports
+</div>
+
+
+<h1 class="csc-title">
+Formation <em>Analysis</em>
+</h1>
+
+
+<p style="color:var(--ivory-dim); font-size:18px;">
+Performance overview of team formations.
+</p>
+
+
+
+
+<div style="
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:30px;
+margin-top:40px;
+">
+
+
+<div class="csc-card">
+
+<h2>
+{{report.summary.totalFormations}}
+</h2>
+
+<p>
+Total Formations
+</p>
+
+</div>
+
+
+
+<div class="csc-card">
+
+<h2>
+{{ "%.2f"|format(report.summary.averageScore or 0) }}
+</h2>
+
+<p>
+Average Score
+</p>
+
+</div>
+
+
+
+<div class="csc-card">
+
+<h2>
+{{report.summary.highestScore or 0}}
+</h2>
+
+<p>
+Highest Score
+</p>
+
+</div>
+
+
+</div>
+
+
+
+
+<table class="csc-table">
+
+
+<tr>
+
+<th>
+Team
+</th>
+
+
+<th>
+Coach
+</th>
+
+
+<th>
+Session
+</th>
+
+
+<th>
+Date
+</th>
+
+
+<th>
+Score
+</th>
+
+</tr>
+
+
+
+{% for f in report.details %}
+
+
+<tr>
+
+
+<td>
+{{f.teamName}}
+</td>
+
+
+<td>
+{{f.coach}}
+</td>
+
+
+<td>
+{{f.sessionType}}
+</td>
+
+
+<td>
+{{f.startDateTime}}
+</td>
+
+
+<td>
+{{f.score}}
+</td>
+
+
+</tr>
+
+
+{% endfor %}
+
+
+
+</table>
+
+
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Email Logs — Country Soccer Club
+{% endblock %}
+
+
+
+{% block content %}
+
+
+<div class="csc-card">
+
+
+<div class="label"
+style="color:var(--gold-soft);">
+System Records
+</div>
+
+
+<h1 class="csc-title">
+Email <em>Logs</em>
+</h1>
+
+
+<p style="color:var(--ivory-dim);font-size:18px;">
+History of automated and administrative email notifications.
+</p>
+
+
+
+<table class="csc-table">
+
+
+<thead>
+
+<tr>
+
+<th>Date</th>
+
+<th>Receiver</th>
+
+<th>Email</th>
+
+<th>Subject</th>
+
+<th>Preview</th>
+
+</tr>
+
+</thead>
+
+
+
+<tbody>
+
+
+{% for e in logs %}
+
+
+<tr>
+
+
+<td>
+{{e.emailDateTime}}
+</td>
+
+
+<td>
+{{e.receiverMemberID}}
+</td>
+
+
+<td>
+{{e.receiverEmail}}
+</td>
+
+
+<td>
+{{e.subject}}
+</td>
+
+
+<td>
+{{e.bodyPreview}}
+</td>
+
+
+</tr>
+
+
+
+{% else %}
+
+
+<tr>
+
+<td colspan="5">
+No email logs found.
+</td>
+
+</tr>
+
+
+{% endfor %}
+
+
+</tbody>
+
+
+</table>
+
+
+
+</div>
+
+
+{% endblock %}

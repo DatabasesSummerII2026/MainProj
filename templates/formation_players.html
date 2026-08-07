@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Formation Players — Country Soccer Club
+{% endblock %}
+
+
+
+{% block content %}
+
+
+<div class="csc-card">
+
+
+<div class="label"
+style="color:var(--gold-soft);">
+Tactical Records
+</div>
+
+
+<h1 class="csc-title">
+Formation <em>Players</em>
+</h1>
+
+
+<p style="color:var(--ivory-dim);font-size:18px;">
+Players assigned to tactical formations.
+</p>
+
+
+
+
+<table class="csc-table">
+
+
+<thead>
+
+<tr>
+
+<th>Formation ID</th>
+
+<th>Team</th>
+
+<th>Player</th>
+
+<th>Position</th>
+
+</tr>
+
+</thead>
+
+
+
+<tbody>
+
+
+{% for p in players %}
+
+
+<tr>
+
+
+<td>
+#{{p.formationID}}
+</td>
+
+
+<td>
+{{p.teamName}}
+</td>
+
+
+<td>
+{{p.playerName}}
+</td>
+
+
+<td>
+{{p.playerRole}}
+</td>
+
+
+</tr>
+
+
+
+{% else %}
+
+
+<tr>
+
+<td colspan="4">
+No formation players found.
+</td>
+
+</tr>
+
+
+{% endfor %}
+
+
+
+</tbody>
+
+
+</table>
+
+
+
+</div>
+
+
+
+{% endblock %}

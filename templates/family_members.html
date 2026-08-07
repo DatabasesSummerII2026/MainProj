@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+
+<div class="csc-card">
+
+
+<div style="
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:30px;
+">
+
+
+<div>
+<h1 class="csc-title">
+Family <em>Members</em>
+</h1>
+
+<p>
+Manage primary and secondary family members associated with club members.
+</p>
+
+</div>
+
+
+<a href="{{ url_for('add_family_member') }}"
+class="nav-cta">
+
++ Add Member
+
+</a>
+
+
+</div>
+
+
+
+<table class="csc-table">
+
+
+<thead>
+
+<tr>
+
+<th>ID</th>
+
+<th>Name</th>
+
+<th>Type</th>
+
+<th>Date of Birth</th>
+
+<th>Phone</th>
+
+<th>Email</th>
+
+<th>Location</th>
+
+</tr>
+
+</thead>
+
+
+
+<tbody>
+
+
+{% for f in family_members %}
+
+
+<tr>
+
+
+<td>
+{{ f.familyID }}
+</td>
+
+
+<td>
+{{ f.firstName }} {{ f.lastName }}
+</td>
+
+
+<td>
+{{ f.familyType }}
+</td>
+
+
+<td>
+{{ f.DOB }}
+</td>
+
+
+<td>
+{{ f.phone }}
+</td>
+
+
+<td>
+{{ f.email }}
+</td>
+
+
+<td>
+{{ f.city }}, {{ f.province }}
+</td>
+
+
+</tr>
+
+
+{% endfor %}
+
+
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+
+{% endblock %}
